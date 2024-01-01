@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Avocat\Avocat.Compiler.csproj" />
+    <ProjectReference Include="..\Avocat.Compiler\Avocat.Compiler.csproj" />
   </ItemGroup>
 
 </Project>
