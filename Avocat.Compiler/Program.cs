@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Avocat.Compiler.Tokenizer;
+using System;
 using System.IO;
 using System.Linq;
 
@@ -11,7 +12,7 @@ namespace Avocat
             try
             {
                 var content = File.ReadAllText("..\\..\\..\\main.av");
-                var tokenizer = new Tokenizer.Tokenizer(content);
+                var tokenizer = new Tokenizer(content);
                 var tokens = tokenizer.GetTokens();
 
                 var parser = new Parser.Parser(tokens);

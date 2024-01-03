@@ -1,7 +1,7 @@
 ﻿using Avocat.Exceptions;
-using Avocat.Expressions;
+using Avocat.Compiler.Expressions;
 using Avocat.Statements;
-using Avocat.Tokenizer;
+using Avocat.Compiler.Tokenizer;
 using System.Collections.Generic;
 
 namespace Avocat.Parser
@@ -15,16 +15,16 @@ namespace Avocat.Parser
         /// <summary>
         /// Tokens to parse
         /// </summary>
-        private readonly IEnumerable<Tokenizer.Token> Tokens;
+        private readonly IEnumerable<Token> Tokens;
 
         /// <summary>
         /// Iterator
         /// </summary>
-        private readonly IEnumerator<Tokenizer.Token> Iterator;
+        private readonly IEnumerator<Token> Iterator;
         #endregion
 
         #region Constructor
-        public Parser(IEnumerable<Tokenizer.Token> tokens)
+        public Parser(IEnumerable<Token> tokens)
         {
             Tokens = tokens;
             Iterator = Tokens.GetEnumerator();
@@ -108,7 +108,7 @@ namespace Avocat.Parser
             Expression expr;
             switch (Iterator.Current.Type)
             {
-                case Tokenizer.ETokenType.INTEGER:
+                case ETokenType.INTEGER:
                     ExpressionNumber left = new ExpressionInteger(Iterator.Current);
 
                     // Try to to build an operation expression
@@ -121,7 +121,7 @@ namespace Avocat.Parser
 
                     break;
 
-                case Tokenizer.ETokenType.FLOAT:
+                case ETokenType.FLOAT:
                     left = new ExpressionFloat(Iterator.Current);
 
                     // Try to to build an operation expression
@@ -134,7 +134,7 @@ namespace Avocat.Parser
 
                     break;
 
-                case Tokenizer.ETokenType.STRING:
+                case ETokenType.STRING:
                     expr = new ExpressionString(Iterator.Current);
 
                     // Consumes the string
@@ -142,7 +142,7 @@ namespace Avocat.Parser
 
                     break;
 
-                case Tokenizer.ETokenType.OPEN_PARENT:
+                case ETokenType.OPEN_PARENT:
 
                     // Consume the parenthesis
                     Iterator.MoveNext();
@@ -151,7 +151,7 @@ namespace Avocat.Parser
                     expr = GetExpression();
 
                     // Expects a closing parenthesis
-                    if (Iterator.Current.Type != Tokenizer.ETokenType.CLOSE_PARENT)
+                    if (Iterator.Current.Type != ETokenType.CLOSE_PARENT)
                         throw new InvalidSyntaxException($"')' attendu. {Iterator.Current.FormatPosition()}");
 
                     // Consume the closing parameter
@@ -159,7 +159,7 @@ namespace Avocat.Parser
 
                     break;
 
-                case Tokenizer.ETokenType.CLOSE_PARENT:
+                case ETokenType.CLOSE_PARENT:
                     throw new InvalidSyntaxException($"{Iterator.Current.FormatPosition()}");
 
                 default:
@@ -179,9 +179,9 @@ namespace Avocat.Parser
 
             switch (Iterator.Current.Type)
             {
-                case Tokenizer.ETokenType.PLUS:
-                case Tokenizer.ETokenType.MINUS:
-                case Tokenizer.ETokenType.MULTIPLY:
+                case ETokenType.PLUS:
+                case ETokenType.MINUS:
+                case ETokenType.MULTIPLY:
                     var operationToken = Iterator.Current;
                     
                     // Consuming the token

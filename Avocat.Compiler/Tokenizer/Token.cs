@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Avocat.Tokenizer
+namespace Avocat.Compiler.Tokenizer
 {
     /// <summary>
     /// Represents a token

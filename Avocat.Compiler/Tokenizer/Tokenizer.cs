@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Avocat.Tokenizer
+namespace Avocat.Compiler.Tokenizer
 {
     /// <summary>
     /// Class that handles the tokenization of the source code

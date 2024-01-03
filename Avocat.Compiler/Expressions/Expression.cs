@@ -1,6 +1,6 @@
-﻿using Avocat.Tokenizer;
+﻿using Avocat.Compiler.Tokenizer;
 
-namespace Avocat.Expressions
+namespace Avocat.Compiler.Expressions
 {
     /// <summary>
     /// Represents an expression

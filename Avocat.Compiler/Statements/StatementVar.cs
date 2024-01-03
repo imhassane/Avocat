@@ -1,8 +1,11 @@
-﻿namespace Avocat.Statements
+﻿using Avocat.Compiler.Expressions;
+using Avocat.Compiler.Tokenizer;
+
+namespace Avocat.Statements
 {
     public class StatementVar : Statement
     {
-        public StatementVar(Tokenizer.Token token, Expressions.Expression expression) : base (token, expression)
+        public StatementVar(Token token, Expression expression) : base (token, expression)
         { }
 
         public override string ToString()

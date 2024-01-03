@@ -1,4 +1,4 @@
-﻿namespace Avocat.Tokenizer
+﻿namespace Avocat.Compiler.Tokenizer
 {
     public static class Keywords
     {

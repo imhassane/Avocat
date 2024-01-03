@@ -1,12 +1,15 @@
-﻿namespace Avocat.Statements
+﻿using Avocat.Compiler.Expressions;
+using Avocat.Compiler.Tokenizer;
+
+namespace Avocat.Statements
 {
     public abstract class Statement
     {
-        public Tokenizer.Token Token { get; private set; }
+        public Token Token { get; private set; }
 
-        public Expressions.Expression Expression { get; private set; }
+        public Expression Expression { get; private set; }
 
-        public Statement(Tokenizer.Token token, Expressions.Expression expression)
+        public Statement(Token token, Expression expression)
         {
             Token = token;
             Expression = expression;

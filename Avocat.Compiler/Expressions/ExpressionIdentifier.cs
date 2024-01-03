@@ -1,4 +1,4 @@
-﻿namespace Avocat.Expressions
+﻿namespace Avocat.Compiler.Expressions
 {
     public class ExpressionIdentifier : Expression
     {
