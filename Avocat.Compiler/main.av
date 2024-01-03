@@ -2,3 +2,6 @@
 dec nom = "Thomas"
 #terminer (0)
 dec annee = (2024)
+# declare a variable with a type
+# dec prix: flottant = 10.0
+dec a: caractere = 'a'

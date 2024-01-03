@@ -179,7 +179,7 @@ namespace Avocat.Parser
                     break;
 
                 case Tokenizer.ETokenType.CLOSE_PARENT:
-                    throw new InvalidSyntaxException($"parenthèse fermante sans parenthèse ouvrante. {Iterator.Current.FormatPosition()}");
+                    throw new InvalidSyntaxException($"{Iterator.Current.FormatPosition()}");
 
                 default:
                     throw new InvalidSyntaxException(Iterator.Current.FormatPosition());

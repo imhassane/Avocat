@@ -1,5 +1,4 @@
 ﻿using Avocat.Exceptions;
-using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -62,6 +61,7 @@ namespace Avocat.Tokenizer
                     }
 
                     var content = buffer.ToString();
+
                     if (Keywords.EXIT.Equals(content))
                     {
                         yield return new Token(ETokenType.EXIT, line: PeekLine(), position: PeekPosition());
@@ -69,6 +69,22 @@ namespace Avocat.Tokenizer
                     else if (Keywords.VAR.Equals(content))
                     {
                         yield return new Token(ETokenType.VAR, line: PeekLine(), position: PeekPosition());
+                    }
+                    else if (Keywords.TYPE_CHAR.Equals(content))
+                    {
+                        yield return new Token(ETokenType.TYPE_CHAR, line: PeekLine(), position: PeekPosition());
+                    }
+                    else if (Keywords.TYPE_FLOAT.Equals(content))
+                    {
+                        yield return new Token(ETokenType.TYPE_FLOAT, line: PeekLine(), position: PeekPosition());
+                    }
+                    else if (Keywords.TYPE_INTEGER.Equals(content))
+                    {
+                        yield return new Token(ETokenType.TYPE_INTEGER, line: PeekLine(), position: PeekPosition());
+                    }
+                    else if (Keywords.TYPE_STRING.Equals(content))
+                    {
+                        yield return new Token(ETokenType.TYPE_STRING, line: PeekLine(), position: PeekPosition());
                     }
                     else
                     {
@@ -165,6 +181,37 @@ namespace Avocat.Tokenizer
                 {
                     Consume();
                     yield return new Token(ETokenType.MULTIPLY, line: ConsumeLine(), position: PeekPosition());
+                }
+
+                else if (Peek().Value == Keywords.TWO_POINTS)
+                {
+                    Consume();
+                    yield return new Token(ETokenType.TWO_POINTS, line: PeekLine(), position: ConsumePosition());
+                }
+
+                else if (Peek().Value == Keywords.SINGLE_QUOTE)
+                {
+                    Consume();
+                    ConsumePosition();
+                    if (Peek().HasValue && Peek(1).HasValue && (char.IsLetterOrDigit(Peek().Value) || char.IsWhiteSpace(Peek().Value)))
+                    {
+                        var caractere = Peek().Value;
+
+                        // Consume the character
+                        Consume();
+                        ConsumePosition();
+
+                        // Consume the closing quote
+                        Consume();
+                        ConsumePosition();
+                        yield return new Token(ETokenType.CHAR, caractere.ToString(), line: PeekLine(), position: ConsumePosition());
+                    } else
+                    {
+                        if (!Peek().HasValue)
+                            throw new InvalidSyntaxException($"Un caractère est attendu. (ligne: {PeekLine()}, position: {PeekPosition()})");
+                        else
+                            throw new InvalidSyntaxException($"''' est attendu. (ligne: {PeekLine()}, position: {PeekPosition()})");
+                    }
                 }
 
                 else if (Peek().Value == Keywords.COMMENT)
