@@ -1,6 +1,7 @@
 ﻿using Avocat.Exceptions;
 using Avocat.Expressions;
 using Avocat.Statements;
+using Avocat.Tokenizer;
 using System.Collections.Generic;
 
 namespace Avocat.Parser
@@ -44,70 +45,50 @@ namespace Avocat.Parser
 
             switch (Iterator.Current.Type)
             {
-                case Tokenizer.ETokenType.VAR:
+                case ETokenType.VAR:
 
                     // Consumes the dec keyword
                     Iterator.MoveNext();
 
-                    // Expect the variable name
-                    if (Iterator.Current.Type != Tokenizer.ETokenType.IDENTIFIER)
-                        throw new InvalidSyntaxException($"Un nom de variable est attendu. {Iterator.Current.FormatPosition()}");
-
-                    var variableName = Iterator.Current;
-
-                    // Consumes the variable name
-                    Iterator.MoveNext();
+                    // Expect a variable name
+                    var variableName = ExpectAndConsumeToken(ETokenType.IDENTIFIER);
 
                     // Expect an equal keyword
-                    if (Iterator.Current.Type != Tokenizer.ETokenType.EQUAL)
-                        throw new InvalidSyntaxException($"'=' attendu. {Iterator.Current.FormatPosition()}");
-
-                    // Consumes the equal keyword
-                    Iterator.MoveNext();
+                    ExpectAndConsumeToken(ETokenType.EQUAL);
 
                     // Expect an expression
                     var expression = GetExpression();
 
                     // Expect an end of line or the end of the file
-                    if (Iterator.Current.Type != Tokenizer.ETokenType.NEW_LINE)
-                        throw new InvalidSyntaxException($"retour à la ligne attendu. {Iterator.Current.FormatPosition()}");
+                    ExpectToken(ETokenType.NEW_LINE);
 
                     stmt = new StatementVar(variableName, expression);
                     break;
 
-                case Tokenizer.ETokenType.EXIT:
+                case ETokenType.EXIT:
 
                     // Consume the exit keyword
                     Iterator.MoveNext();
 
                     // Expect an open parenthesis
-                    if (Iterator.Current.Type != Tokenizer.ETokenType.OPEN_PARENT)
-                        throw new InvalidSyntaxException($"'(' attendu. {Iterator.Current.FormatPosition()}");
-
-                    // Consume the open parenthesis
-                    Iterator.MoveNext();
+                    ExpectAndConsumeToken(ETokenType.OPEN_PARENT);
 
                     // Expect an integer expression
                     var expr = GetExpression();
 
                     if (!(expr is ExpressionInteger))
-                        throw new InvalidSyntaxException($"Un entier attendu. {Iterator.Current.FormatPosition()}");
+                        throw new InvalidSyntaxException($"Un entier attendu. {expr.Token.FormatPosition()}");
 
                     // Expect a closing parenthesis
-                    if (Iterator.Current.Type != Tokenizer.ETokenType.CLOSE_PARENT)
-                        throw new InvalidSyntaxException($"')' attendu. {Iterator.Current.FormatPosition()}");
-
-                    // Consume the closing parenthesis
-                    Iterator.MoveNext();
+                    ExpectAndConsumeToken(ETokenType.CLOSE_PARENT);
 
                     // Expect a new line
-                    if (Iterator.Current.Type != Tokenizer.ETokenType.NEW_LINE)
-                        throw new InvalidSyntaxException($"retour à la ligne attendu. {Iterator.Current.FormatPosition()}");
+                    ExpectToken(ETokenType.NEW_LINE);
 
                     stmt = new StatementExit(Iterator.Current, expr);
                     break;
 
-                case Tokenizer.ETokenType.NEW_LINE:
+                case ETokenType.NEW_LINE:
                     stmt = new StatementEOF(Iterator.Current, new ExpressionEOF(Iterator.Current));
                     break;
 
@@ -226,6 +207,58 @@ namespace Avocat.Parser
                 default:
                     return null;
             }
+        }
+
+        /// <summary>
+        /// Gets the next token
+        /// </summary>
+        /// <param name="expected">The expected token</param>
+        /// <returns>Next token</returns>
+        private Token ExpectToken(ETokenType expected)
+        {
+            if(Iterator.Current.Type != expected)
+            {
+                var token = string.Empty;
+
+                switch (expected)
+                {
+                    case ETokenType.CLOSE_PARENT:
+                        token = Keywords.CLOSE_PARAM.ToString();
+                        break;
+                    case ETokenType.EQUAL:
+                        token = Keywords.EQUAL.ToString();
+                        break;
+                    case ETokenType.SINGLE_QUOTE:
+                        token = Keywords.SINGLE_QUOTE.ToString();
+                        break;
+                    case ETokenType.OPEN_PARENT:
+                        token = Keywords.OPEN_PARAM.ToString();
+                        break;
+                    case ETokenType.NEW_LINE:
+                        token = "Un retour à la ligne est";
+                        break;
+                    default:
+                        break;
+                }
+
+                throw new InvalidSyntaxException($"{(token.Length > 0 ? token : "Un mot-clé différent est")} attendu. {Iterator.Current.FormatPosition()}");
+            }
+
+            return Iterator.Current;
+        }
+
+        /// <summary>
+        /// Gets and consumes the next token
+        /// </summary>
+        /// <param name="expected">The expected token</param>
+        /// <returns>Next token</returns>
+        private Token ExpectAndConsumeToken(ETokenType expected)
+        {
+            var token = ExpectToken(expected);
+
+            Iterator.MoveNext();
+
+            return token;
         }
         #endregion
     }
