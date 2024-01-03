@@ -72,19 +72,19 @@ namespace Avocat.Compiler.Tokenizer
                     }
                     else if (Keywords.TYPE_CHAR.Equals(content))
                     {
-                        yield return new Token(ETokenType.TYPE_CHAR, line: PeekLine(), position: PeekPosition());
+                        yield return new Token(ETokenType.TYPE, ((ushort)EType.CHAR).ToString(), PeekLine(), PeekPosition());
                     }
                     else if (Keywords.TYPE_FLOAT.Equals(content))
                     {
-                        yield return new Token(ETokenType.TYPE_FLOAT, line: PeekLine(), position: PeekPosition());
+                        yield return new Token(ETokenType.TYPE, ((ushort)EType.FLOAT).ToString(), PeekLine(), PeekPosition());
                     }
                     else if (Keywords.TYPE_INTEGER.Equals(content))
                     {
-                        yield return new Token(ETokenType.TYPE_INTEGER, line: PeekLine(), position: PeekPosition());
+                        yield return new Token(ETokenType.TYPE, ((ushort)EType.INTEGER).ToString(), PeekLine(), PeekPosition());
                     }
                     else if (Keywords.TYPE_STRING.Equals(content))
                     {
-                        yield return new Token(ETokenType.TYPE_STRING, line: PeekLine(), position: PeekPosition());
+                        yield return new Token(ETokenType.TYPE, ((ushort)EType.STRING).ToString(), PeekLine(), PeekPosition());
                     }
                     else
                     {

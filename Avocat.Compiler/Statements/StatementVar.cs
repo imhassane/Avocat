@@ -5,8 +5,15 @@ namespace Avocat.Statements
 {
     public class StatementVar : Statement
     {
-        public StatementVar(Token token, Expression expression) : base (token, expression)
-        { }
+        /// <summary>
+        /// Variable type if defined
+        /// </summary>
+        public EType Type { get; private set; }
+
+        public StatementVar(Token token, Expression expression, EType type = EType.NULL) : base (token, expression)
+        {
+            if (type != EType.NULL) Type = type;
+        }
 
         public override string ToString()
         {

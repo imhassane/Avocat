@@ -53,6 +53,14 @@ namespace Avocat.Parser
                     // Expect a variable name
                     var variableName = ExpectAndConsumeToken(ETokenType.IDENTIFIER);
 
+                    // Maybe expect a type
+                    EType type = EType.NULL;
+                    if (Iterator.Current.Type == ETokenType.TWO_POINTS)
+                    {
+                        Iterator.MoveNext();
+                        type = (EType)(ushort.TryParse(ExpectAndConsumeToken(ETokenType.TYPE).Value, out ushort result) ? result : (int)EType.NULL);
+                    }
+
                     // Expect an equal keyword
                     ExpectAndConsumeToken(ETokenType.EQUAL);
 
@@ -62,7 +70,7 @@ namespace Avocat.Parser
                     // Expect an end of line or the end of the file
                     ExpectToken(ETokenType.NEW_LINE);
 
-                    stmt = new StatementVar(variableName, expression);
+                    stmt = new StatementVar(variableName, expression, type);
                     break;
 
                 case ETokenType.EXIT:
@@ -161,6 +169,14 @@ namespace Avocat.Parser
 
                 case ETokenType.CLOSE_PARENT:
                     throw new InvalidSyntaxException($"{Iterator.Current.FormatPosition()}");
+
+                case ETokenType.CHAR:
+
+                    expr = new ExpressionChar(Iterator.Current);
+
+                    // Consume the character
+                    Iterator.MoveNext();
+                    break;
 
                 default:
                     throw new InvalidSyntaxException(Iterator.Current.FormatPosition());

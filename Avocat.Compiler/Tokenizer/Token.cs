@@ -70,13 +70,21 @@ namespace Avocat.Compiler.Tokenizer
         MINUS,
         TWO_POINTS,
         SINGLE_QUOTE,
-        TYPE_INTEGER,
-        TYPE_STRING,
-        TYPE_FLOAT,
-        TYPE_CHAR,
+        TYPE,
         MULTIPLY,
         OPEN_PARENT,
         CLOSE_PARENT,
         COMMENT
+    }
+
+    public enum EType : ushort
+    {
+        INTEGER = 1,
+        FLOAT = 2,
+        STRING = 3,
+        CHAR = 4,
+        ARRAY = 5,
+        
+        NULL = 6
     }
 }
